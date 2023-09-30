@@ -5,25 +5,65 @@ function _init()
     --
     debug = true
     gtime = 0
+    gstate = 0
     ndeath = 0
     freeze_time = 0
     shake = 0
     cam = {x = 0, y = 0}
     printable = 0
     --
-    levels = {level0, level1_1, level1_2, level1_3, level1_4, level2_1}
+    levels = {level1_1, level1_2, level1_3, level1_4, level2_1}
     current_level = 1
-    init_level(levels[current_level])
+    -- init_level(levels[current_level])
+    -- init_menu()
+    init_lvl_selection()
+end
+
+-- gstate
+-- 1 = Menu
+-- 2 = Level Selection
+-- 3 = Level
+
+function init_menu()
+    gtime = 0
+    gstate = 1
+    objects = {}
+    particles = {}
+    --
+    menuitem(1)
+    menuitem(2)
+end
+
+function init_lvl_selection()
+    gtime = 0
+    gstate = 2
+    objects = {}
+    particles = {}
+    menuitem(1, "back to menu", function() init_menu() end)
+    menuitem(2)
+    --
+    local margin_x = 12
+    local margin_y = 28
+    local line_size = 6
+    for i = 0, #levels - 1 do
+        local lvl = create(button, margin_x + (i % line_size) * 16, margin_y + flr(i \ line_size) * 16)
+        lvl.name = tostring(i + 1)
+        lvl.lvl = levels[i + 1]
+    end
 end
 
 function init_level(level)
     gtime = 0
+    gstate = 3
     objects = {}
     particles = {}
     target = nil
     target_x = nil
     target_y = nil
     target_chair = nil
+    --
+    menuitem(1, "restart level", function() init_level(levels[current_level]) end)
+    menuitem(2, "level selection", function() init_lvl_selection() end)
     --
     level:init()
     -- create(chandelier, 11, 9)
@@ -36,7 +76,31 @@ function _update60()
     -- timers
     gtime += 1
 
-    update_level()
+    if gstate == 1 then
+        update_menu()
+    elseif gstate == 2 then
+        update_lvl_selection()
+    elseif gstate == 3 then
+        update_level()
+    end
+end
+
+function update_menu()
+    if btnp(❎) then init_lvl_selection() end
+end
+
+function update_lvl_selection()
+    for o in all(objects) do
+        if o.freeze > 0 then
+            o.freeze -= 1
+        else
+            o:update()
+        end
+
+        if o.base != player and o.destroyed then
+            del(objects, o)
+        end
+    end
 end
 
 function update_level()
@@ -199,7 +263,17 @@ function _draw()
     end
 
     -- draw map
-    map(0, 0, 0, 0, 16, 16)
+    if gstate == 1 then
+        map(0, 0, 0, 0, 16, 16)
+        -- local moon_x, moon_y = 100, 23
+        -- circfill(moon_x, moon_y, 8, 7)
+        -- circfill(moon_x - 1, moon_y, 8, 6)
+        -- circfill(moon_x - 6, moon_y - 2, 8, 0)
+    elseif gstate == 2 then
+        map(0, 0, 0, 0, 16, 16)
+    elseif gstate == 3 then
+        map(0, 0, 0, 0, 16, 16)
+    end
 
     -- draw objects
     for o in all(objects) do
@@ -215,8 +289,21 @@ function _draw()
     for o in all(objects) do
         o:draw_ui()
     end
+
+    if gstate == 1 then
+        print_centered("game title", -1, 23, 1)
+        print_centered("press ❎ or left click", -1, 64-1, 1)
+        print_centered("press ❎ or left click", 0, 64, 7)
+    elseif gstate == 2 then
+        print_centered("level selection", -1, 13-1, 1)
+        print_centered("level selection", 0, 13, 7)
+    end
+
     draw_cursor()
-    print(printable, cam.x + 80, cam.y + 120, 4)
+
+    if debug then
+        print(printable, cam.x + 80, cam.y + 120, 4)
+    end
 end
 
 function draw_cursor()

@@ -99,6 +99,26 @@ function chandelier.draw(self)
     circfill(self.x, self.y, 1, 9)
 end
 
+button = new_type(0)
+button.color = 7
+button.hit_w = 10
+button.hit_h = 10
+button.lvl = nil
+button.name = ""
+
+function button.update(self)
+    if btnp(❎) and on_cursor(self) then
+        current_level = find_item_table_index(self.lvl, levels)
+        init_level(self.lvl)
+    end
+end
+
+function button.draw(self)
+    rectfill(self.x, self.y, self.x + self.hit_w - 1, self.y + self.hit_h - 1, self.color)
+    rect(self.x, self.y, self.x + self.hit_w - 1, self.y + self.hit_h - 1, 1)
+    print(self.name, self.x + self.hit_w/2, self.y + self.hit_h/2, 1)
+end
+
 -- PARTICLES
 particles = {}
 
