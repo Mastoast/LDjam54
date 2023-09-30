@@ -20,18 +20,14 @@ function init_level()
     target = nil
     target_x = nil
     target_y = nil
-    -- gen checkpoints
-    -- for i=0, 127 do
-    --     for y=0, 63 do
-    --         if mget(i, y) == 4 then
-    --             create(rectangle, i*8 + 4, y*8 + 4)
-    --         end
-    --     end
-    -- end
+    target_chair = nil
+    --
+    create(chair, 32, 32)
+    create(ghost, 32, 100)
+    create(chair, 64, 32)
+    create(chair, 32, 64)
     create(chair, 64, 64)
-    create(chair, 90, 92)
-    create(ghost, 32, 32)
-    create(skeleton, 112, 55)
+    create(skeleton, 90, 55)
     create(vampire, 16, 100)
     create(wolf, 48, 16)
     create(witch, 12, 16)
@@ -73,10 +69,12 @@ function update_level()
         else
             pickup_target()
         end
+        update_solution()
     end
 
     if btnp(🅾️) then
         reset_target()
+        update_solution()
     end
 
     if target then
@@ -88,19 +86,24 @@ function update_level()
         a:update()
     end
 
-    printable = target
+    printable = target_chair
+end
+
+function update_solution()
+
 end
 
 function pickup_target()
     for o in all(objects) do
         if o.movable and on_cursor(o) then
             if o.chair then
+                target_chair = o.chair
                 o.chair.user = nil
                 o.chair = nil
             end
             target = o
             target_x, target_y = target.x, target.y
-
+            target.picked = true
             break
         end
     end
@@ -108,6 +111,7 @@ end
 
 function release_target()
     if not target then return end
+    target.picked = false
     for o in all(objects) do
         if o != target and on_cursor(o) then
             if o.base == chair then
@@ -115,6 +119,8 @@ function release_target()
                     o.user = target
                     target.chair = o
                     target.x, target.y = o.x, o.y
+                    target, target_x, target_y = nil, nil, nil
+                    target_chair = nil
                     target = nil
                     break
                 else
@@ -131,7 +137,13 @@ end
 function reset_target()
     if not target then return end
     target.x, target.y = target_x, target_y
+    if target_chair then
+        target.chair = target_chair
+        target.chair.user = target
+    end
+    target.picked = false
     target, target_x, target_y = nil, nil, nil
+    target_chair = nil
 end
 
 function _draw()
@@ -171,6 +183,10 @@ function draw_cursor()
 end
 
 -- UTILS
+
+function get_distance(obj1, obj2)
+    return sqrt((obj2.x + obj2.hit_w/2 - obj1.x - obj1.hit_w/2)^2 + (obj2.y + obj2.hit_h/2 - obj1.y - obj1.hit_h/2)^2)
+end
 
 function on_cursor(object)
     return object:contains(stat(32), stat(33))

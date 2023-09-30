@@ -17,6 +17,9 @@ monster.sprite_h = 2
 monster.hit_w = 16
 monster.hit_h = 16
 monster.movable = true
+monster.radius = 20
+monster.chair = nil
+monster.is_happy = false
 
 function monster.update(self)
     
@@ -26,6 +29,17 @@ function monster.draw(self)
     --spr(self.spr, self.x, self.y, self.sprite_w, self.sprite_h, self.flip_x, self.flip_y)
     -- local factor = gtime % 50 < 25 and self.hit_h or self.hit_h + 1
     sspr((self.spr % 16) * 8, flr(self.spr \ 16) * 8, self.hit_w, self.hit_h, self.x, self.y, self.hit_w, self.hit_h)
+    -- draw radius
+    if self.picked then
+        circ(self.x + self.hit_w/2, self.y + self.hit_h/2, self.radius, 7)
+    end
+    if self.chair then
+        if  self.is_happy then
+            print("♥", self.x  + self.hit_w / 2, self.y - 7, 8)
+        else
+            print("!", self.x  + self.hit_w / 2, self.y - 7, 8)
+        end
+    end
 end
 
 ghost = new_type(20, monster)
