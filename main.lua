@@ -14,9 +14,15 @@ function _init()
     --
     levels = {level1_1, level1_2, level1_3, level1_4, level2_1}
     current_level = 1
+    --
+    cartdata("mastoast_socialmonsters_v1")
+    for index = 1, #levels do
+        levels[index].cleared = (dget(index) == 1 and true) or false
+    end
     -- init_level(levels[current_level])
     -- init_menu()
     init_lvl_selection()
+    -- create(bat, 64, 64)
 end
 
 -- gstate
@@ -161,10 +167,15 @@ function update_level()
 end
 
 function update_solution()
+    local win = true
     for o in all(objects) do
         if o.base.base == monster then
-            o:update_solution()
+            if not o:update_solution() then win = false end
         end
+    end
+    if win == true and not levels[current_level].cleared then
+        levels[current_level].cleared = true
+        dset(current_level, 1)
     end
 end
 

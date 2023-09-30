@@ -1,6 +1,6 @@
 monster_map = { chair, ghost, skeleton, vampire, wolf, witch }
 
-function load_level(level)
+function load_level_from_map(level)
     local lmap = level.map
     for i=lmap.x,lmap.x + 15 do
         for j=lmap.y,lmap.y + 15 do
@@ -42,7 +42,7 @@ function level0.init(self)
     end
 end
 
-level1_1 = { radius = 20 }
+level1_1 = { radius = 256 }
 function level1_1.init(self)
     create(chair, 56, 56)
     create(skeleton, 90, 55)
@@ -50,16 +50,16 @@ end
 
 level1_2 = { radius = 20, map = {x = 16, y = 0} }
 function level1_2.init(self)
-    load_level(self)
+    load_level_from_map(self)
 end
 
 level1_3 = { radius = 20, map = {x = 48, y = 0} }
 function level1_3.init(self)
-    load_level(self)
+    load_level_from_map(self)
 end
 
 
 level1_4 = { radius = 20, map = {x = 32, y = 0} }
 function level1_4.init(self)
-    load_level(self)
+    load_level_from_map(self)
 end

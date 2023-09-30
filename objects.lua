@@ -20,7 +20,7 @@ monster.movable = true
 monster.radius = 20
 monster.chair = nil
 monster.is_happy = false
-function monster.update_solution(self) self.is_happy = true; return self.is_happy end
+function monster.update_solution(self) self.is_happy = true; return self.is_happy and self.chair end
 
 function monster.update(self)
     
@@ -99,6 +99,22 @@ function chandelier.draw(self)
     circfill(self.x, self.y, 1, 9)
 end
 
+bat = new_type(120)
+bat.sprs = {120, 121}
+bat.spr_anim = 1
+bat.anim_time = 7
+
+function bat.update(self)
+    if gtime%self.anim_time == 0 then
+        self.spr = self.sprs[(self.spr + 1)%#self.sprs + 1]
+    end
+end
+
+function bat.draw(self)
+    spr(self.spr, self.x, self.y)
+    spr(self.spr, self.x + self.hit_w, self.y, 1, 1, true, false )
+end
+
 button = new_type(0)
 button.color = 7
 button.hit_w = 10
@@ -117,6 +133,10 @@ function button.draw(self)
     rectfill(self.x, self.y, self.x + self.hit_w - 1, self.y + self.hit_h - 1, self.color)
     rect(self.x, self.y, self.x + self.hit_w - 1, self.y + self.hit_h - 1, 1)
     print(self.name, self.x + self.hit_w/2, self.y + self.hit_h/2, 1)
+    if self.lvl.cleared then
+        line(self.x + 2, self.y, self.x, self.y + 2, 8)
+        line(self.x + 3, self.y, self.x, self.y + 3, 8)
+    end
 end
 
 -- PARTICLES
