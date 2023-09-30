@@ -20,7 +20,7 @@ monster.movable = true
 monster.radius = 20
 monster.chair = nil
 monster.is_happy = false
-function monster.update_solution(self) end
+function monster.update_solution(self) self.is_happy = true; return self.is_happy end
 
 function monster.update(self)
     
@@ -44,12 +44,39 @@ function monster.draw(self)
 end
 
 ghost = new_type(20, monster)
+function ghost.update_solution(self)
+    self.is_happy = false
+    for o in all(objects) do
+        if self != o and o.base == ghost and get_distance(self, o) < self.radius then
+            self.is_happy = true
+        end
+    end
+    return self.is_happy
+end
 
 skeleton = new_type(22, monster)
 
 vampire = new_type(24, monster)
+function vampire.update_solution(self)
+    self.is_happy = true
+    for o in all(objects) do
+        if self != o and o.base == wolf and get_distance(self, o) < self.radius then
+            self.is_happy = false
+        end
+    end
+    return self.is_happy
+end
 
 wolf = new_type(26, monster)
+function wolf.update_solution(self)
+    self.is_happy = true
+    for o in all(objects) do
+        if self != o and o.base == vampire and get_distance(self, o) < self.radius then
+            self.is_happy = false
+        end
+    end
+    return self.is_happy
+end
 
 witch = new_type(28, monster)
 

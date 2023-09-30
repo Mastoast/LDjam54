@@ -23,11 +23,11 @@ function init_level()
     target_chair = nil
     --
     create(chair, 32, 32)
-    create(ghost, 32, 100)
-    create(ghost, 60, 100)
     create(chair, 50, 32)
     create(chair, 32, 50)
     create(chair, 50, 50)
+    create(ghost, 32, 100)
+    create(ghost, 60, 100)
     create(skeleton, 90, 55)
     create(vampire, 16, 100)
     create(wolf, 48, 16)
@@ -86,8 +86,6 @@ function update_level()
     for a in all(particles) do
         a:update()
     end
-
-    printable = target_chair
 end
 
 function update_solution()
@@ -127,10 +125,10 @@ function release_target()
                     target, target_x, target_y, target_chair = nil
                     break
                 else
-                    reset_target()
+                    switch_target(o.user)
                 end
             elseif o.movable then
-                reset_target()
+                switch_target(o)
             end
         end
     end
@@ -146,6 +144,23 @@ function reset_target()
     end
     target.picked = false
     target, target_x, target_y, target_chair = nil
+end
+
+function switch_target(object)
+    target.chair = object.chair
+    target.x = object.x
+    target.y = object.y
+    if target.chair then
+        target.chair.user = target
+    end
+
+    object.chair = target_chair
+    object.x = target_x
+    object.y = target_y
+    if object.chair then
+        object.chair.user = target_chair
+    end
+
 end
 
 function _draw()
