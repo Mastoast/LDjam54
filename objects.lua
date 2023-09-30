@@ -20,6 +20,7 @@ monster.movable = true
 monster.radius = 20
 monster.chair = nil
 monster.is_happy = false
+function monster.update_solution(self) end
 
 function monster.update(self)
     

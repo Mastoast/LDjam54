@@ -5,6 +5,11 @@ __lua__
 #include objects.lua
 #include main.lua
 
+--[[ 
+    TODO
+    reset target if touch walls
+]]
+
 --❎🅾️⬆️⬇️⬅️➡️
 --█▥░➡️⧗▤⬆️☉🅾️◆
 --…★⬇️✽●♥웃⌂⬅️⬅️😐

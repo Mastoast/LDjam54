@@ -24,9 +24,10 @@ function init_level()
     --
     create(chair, 32, 32)
     create(ghost, 32, 100)
-    create(chair, 64, 32)
-    create(chair, 32, 64)
-    create(chair, 64, 64)
+    create(ghost, 60, 100)
+    create(chair, 50, 32)
+    create(chair, 32, 50)
+    create(chair, 50, 50)
     create(skeleton, 90, 55)
     create(vampire, 16, 100)
     create(wolf, 48, 16)
@@ -90,7 +91,11 @@ function update_level()
 end
 
 function update_solution()
-
+    for o in all(objects) do
+        if o.base.base == monster then
+            o:update_solution()
+        end
+    end
 end
 
 function pickup_target()
@@ -119,9 +124,7 @@ function release_target()
                     o.user = target
                     target.chair = o
                     target.x, target.y = o.x, o.y
-                    target, target_x, target_y = nil, nil, nil
-                    target_chair = nil
-                    target = nil
+                    target, target_x, target_y, target_chair = nil
                     break
                 else
                     reset_target()
@@ -131,7 +134,7 @@ function release_target()
             end
         end
     end
-    target = nil
+    target, target_x, target_y, target_chair = nil
 end
 
 function reset_target()
@@ -142,8 +145,7 @@ function reset_target()
         target.chair.user = target
     end
     target.picked = false
-    target, target_x, target_y = nil, nil, nil
-    target_chair = nil
+    target, target_x, target_y, target_chair = nil
 end
 
 function _draw()
