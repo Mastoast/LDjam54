@@ -27,9 +27,11 @@ function monster.update(self)
 end
 
 function monster.draw(self)
-    --spr(self.spr, self.x, self.y, self.sprite_w, self.sprite_h, self.flip_x, self.flip_y)
-    -- local factor = gtime % 50 < 25 and self.hit_h or self.hit_h + 1
-    sspr((self.spr % 16) * 8, flr(self.spr \ 16) * 8, self.hit_w, self.hit_h, self.x, self.y, self.hit_w, self.hit_h)
+    local size = self.hit_h
+    if self.picked then
+        size = gtime % 50 < 25 and self.hit_h or self.hit_h - 1
+    end
+    sspr((self.spr % 16) * 8, flr(self.spr \ 16) * 8, self.hit_w, self.hit_h, self.x, self.y, self.hit_w, size)
 end
 
 function monster.draw_ui(self)
@@ -83,6 +85,20 @@ end
 
 witch = new_type(28, monster)
 
+chandelier = new_type(4)
+function chandelier.update(self)
+    if gtime % 20 == 1 then
+        spawn_particles(4, 3, self.x, self.y, 10, true)
+    end
+    if gtime % 10 == 1 then
+        spawn_particles(1, 2, self.x, self.y, 9, false)
+    end
+end
+
+function chandelier.draw(self)
+    circfill(self.x, self.y, 1, 9)
+end
+
 -- PARTICLES
 particles = {}
 
@@ -90,9 +106,12 @@ particles = {}
 -- size
 -- x / y
 -- color
-function spawn_particles(nb,s,x,y,c)
+function spawn_particles(nb,s,x,y,c, randomize)
+    randomize = randomize or false
     for i=1,flr(nb) do
-        add(particles, make_particle(s,x,y,c))
+        local xm = x + (randomize and (rnd(2) - 1) or 0)
+        local ym = y + (randomize and (rnd(2) - 1) or 0)
+        add(particles, make_particle(s,xm,ym,c))
     end
 end
 

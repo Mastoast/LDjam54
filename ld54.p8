@@ -8,12 +8,10 @@ __lua__
 
 --[[ 
     TODO
-    reset target if touch walls
 
     Visuals
-    mosnter animations
+    monster animations
     monster ui animation
-    particles on pick-up / swap / release
     decorations
     light effects
 ]]

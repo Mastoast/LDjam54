@@ -11,7 +11,7 @@ function _init()
     cam = {x = 0, y = 0}
     printable = 0
     --
-    levels = {level1_1, level1_2, level1_3, level1_4, level2_1}
+    levels = {level0, level1_1, level1_2, level1_3, level1_4, level2_1}
     current_level = 1
     init_level(levels[current_level])
 end
@@ -26,6 +26,10 @@ function init_level(level)
     target_chair = nil
     --
     level:init()
+    -- create(chandelier, 11, 9)
+    -- create(chandelier, 115, 113)
+    -- create(chandelier, 11, 113)
+    -- create(chandelier, 115, 9)
 end
 
 function _update60()
@@ -111,6 +115,7 @@ function pickup_target()
             target = o
             target_x, target_y = target.x, target.y
             target.picked = true
+            spawn_particles(5,4,stat(32),stat(33),2)
             break
         end
     end
@@ -119,6 +124,10 @@ end
 function release_target()
     if not target then return end
     target.picked = false
+    if cursor_out_of_map() then
+        reset_target()
+        return
+    end
     for o in all(objects) do
         if o != target and on_cursor(o) then
             if o.base == chair then
@@ -128,15 +137,15 @@ function release_target()
                     target.x, target.y = o.x, o.y
                     target, target_x, target_y, target_chair = nil
                     break
-                else
-                    switch_target(o.user)
                 end
             elseif o.movable then
                 switch_target(o)
+                break
             end
         end
     end
     target, target_x, target_y, target_chair = nil
+    spawn_particles(5,4,stat(32),stat(33),2)
 end
 
 function reset_target()
@@ -151,20 +160,32 @@ function reset_target()
 end
 
 function switch_target(object)
-    target.chair = object.chair
+    spawn_particles(5,4,target_x,target_y,2)
+
+    local new_chair
+
+    if object.chair then
+        new_chair = object.chair
+    end
+
+    object.chair = nil
+
     target.x = object.x
     target.y = object.y
-    if target.chair then
-        target.chair.user = target
+    if target_chair then
+        object.chair = target_chair
+        target_chair.user = object
     end
-
-    object.chair = target_chair
     object.x = target_x
     object.y = target_y
-    if object.chair then
-        object.chair.user = target_chair
+    if new_chair then
+        target.chair = new_chair
+        new_chair.user = target
     end
+end
 
+function cursor_out_of_map()
+    return stat(32) > 120 or stat(33) > 120 or stat(32) < 8 or stat(33) < 8
 end
 
 function _draw()
