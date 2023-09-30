@@ -3,6 +3,7 @@ function _init()
     poke(0x5f2d, 3)
     cursor_color = 7
     --
+    debug = true
     gtime = 0
     ndeath = 0
     freeze_time = 0
@@ -10,10 +11,12 @@ function _init()
     cam = {x = 0, y = 0}
     printable = 0
     --
-    init_level()
+    levels = {level1_1, level1_2, level1_3, level1_4, level2_1}
+    current_level = 1
+    init_level(levels[current_level])
 end
 
-function init_level()
+function init_level(level)
     gtime = 0
     objects = {}
     particles = {}
@@ -22,16 +25,7 @@ function init_level()
     target_y = nil
     target_chair = nil
     --
-    create(chair, 32, 32)
-    create(chair, 50, 32)
-    create(chair, 32, 50)
-    create(chair, 50, 50)
-    create(ghost, 32, 100)
-    create(ghost, 60, 100)
-    create(skeleton, 90, 55)
-    create(vampire, 16, 100)
-    create(wolf, 48, 16)
-    create(witch, 12, 16)
+    level:init()
 end
 
 function _update60()
@@ -81,6 +75,16 @@ function update_level()
     if target then
         target.x = stat(32) - target.hit_w /2
         target.y = stat(33) - target.hit_h /2
+    end
+
+    if debug then
+        if stat(36) > 0 then
+            current_level = min(current_level + 1, #levels)
+            init_level(levels[current_level])
+        elseif stat(36) < 0 then
+            current_level = max(current_level - 1, 1)
+            init_level(levels[current_level])
+        end
     end
 
     for a in all(particles) do
@@ -187,7 +191,9 @@ function _draw()
     end
 
     -- UI
-
+    for o in all(objects) do
+        o:draw_ui()
+    end
     draw_cursor()
     print(printable, cam.x + 80, cam.y + 120, 4)
 end

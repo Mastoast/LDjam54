@@ -20,6 +20,7 @@ object.freeze = 0
 
 function object.init(self) end
 function object.update(self) end
+function object.draw_ui(self) end
 function object.draw(self)
     spr(self.spr, self.x, self.y, self.sprite_w, self.sprite_h, self.flip_x, self.flip_y)
 end
