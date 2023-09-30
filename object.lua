@@ -12,6 +12,8 @@ object.hit_x = 0
 object.hit_y = 0
 object.hit_w = 8
 object.hit_h = 8
+object.sprite_w = 1
+object.sprite_h = 1
 object.facing = 1
 object.solid = true
 object.freeze = 0
@@ -19,7 +21,7 @@ object.freeze = 0
 function object.init(self) end
 function object.update(self) end
 function object.draw(self)
-    spr(self.spr, self.x, self.y, 1, 1, self.flip_x, self.flip_y)
+    spr(self.spr, self.x, self.y, self.sprite_w, self.sprite_h, self.flip_x, self.flip_y)
 end
 
 function object.move_x(self, x, on_collide)
@@ -131,10 +133,11 @@ function create(type, x, y, hit_w, hit_h)
     return obj
 end
 
-function new_type(spr)
+function new_type(spr, base)
+    local base = base or object
     local obj = {}
     obj.spr = spr
-    obj.base = object
+    obj.base = base
     setmetatable(obj, lookup)
     types[spr] = obj
     return obj

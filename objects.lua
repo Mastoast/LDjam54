@@ -5,6 +5,39 @@ function rectangle.draw(self)
     rectfill(self.x, self.y, self.x + self.hit_w - 1, self.y + self.hit_h - 1, self.color)
 end
 
+chair = new_type(16)
+chair.sprite_w = 2
+chair.sprite_h = 2
+chair.hit_w = 16
+chair.hit_h = 16
+
+monster = new_type(0)
+monster.sprite_w = 2
+monster.sprite_h = 2
+monster.hit_w = 16
+monster.hit_h = 16
+monster.movable = true
+
+function monster.update(self)
+    
+end
+
+function monster.draw(self)
+    --spr(self.spr, self.x, self.y, self.sprite_w, self.sprite_h, self.flip_x, self.flip_y)
+    -- local factor = gtime % 50 < 25 and self.hit_h or self.hit_h + 1
+    sspr((self.spr % 16) * 8, flr(self.spr \ 16) * 8, self.hit_w, self.hit_h, self.x, self.y, self.hit_w, self.hit_h)
+end
+
+ghost = new_type(20, monster)
+
+skeleton = new_type(22, monster)
+
+vampire = new_type(24, monster)
+
+wolf = new_type(26, monster)
+
+witch = new_type(28, monster)
+
 -- PARTICLES
 particles = {}
 
