@@ -13,7 +13,7 @@ function _init()
     printable = 0
     --
     exir_door_pos = {x = 105, y = 105}
-    levels = {level1_1, level1_2, level1_3, level1_4, level2_1, level2_2, level2_3, level2_4, level3_1, level3_2, level3_3, level3_4}
+    levels = {level1_1, level1_2, level1_3, level1_4, level2_1, level2_2, level2_3, level2_4, level3_1, level3_2, level3_3, level3_4, level3_5, level3_6}
     current_level = 4
     --
     cartdata("mastoast_transilavniawkward_v1")
@@ -21,7 +21,7 @@ function _init()
     -- for index = 1, #levels do
     --     dset(index, 0)
     -- end
-    --complete save
+    -- -- complete save
     -- for index = 1, #levels do
     --     dset(index, 1)
     -- end

@@ -66,7 +66,7 @@ ghost = new_type(20, monster)
 function ghost.update_solution(self)
     self.is_happy = false
     for o in all(objects) do
-        if self != o and o.base == ghost and get_distance(self, o) < self.radius then
+        if self != o and o.base == ghost and o.chair and get_distance(self, o) < self.radius then
             self.is_happy = true
         end
     end
@@ -78,7 +78,7 @@ function skeleton.update_solution(self)
     self.is_happy = true
     for o in all(objects) do
         if self != o then
-            if o.base == witch and get_distance(self, o) < self.radius then
+            if o.base == witch and o.chair and get_distance(self, o) < self.radius then
                 self.is_happy = false
             end
         end
@@ -91,7 +91,7 @@ function vampire.update_solution(self)
     self.is_happy = true
     for o in all(objects) do
         if self != o then
-            if o.base == vampire and get_distance(self, o) < self.radius then
+            if o.base == vampire and o.chair and get_distance(self, o) < self.radius then
                 self.is_happy = false
             end
         end
@@ -103,7 +103,7 @@ wolf = new_type(26, monster)
 function wolf.update_solution(self)
     self.is_happy = true
     for o in all(objects) do
-        if self != o and o.base == vampire and get_distance(self, o) < self.radius then
+        if self != o and o.base == vampire and o.chair and get_distance(self, o) < self.radius then
             self.is_happy = false
         end
     end
@@ -116,14 +116,17 @@ function witch.update_solution(self)
     local close_ghost_nb = 0
     self.is_happy = true
     for o in all(objects) do
+        if self != o and o.base == witch and o.chair and get_distance(self, o) < self.radius then
+            self.is_happy = false
+        end
         if o.base == ghost then
             ghost_nb += 1
-            if get_distance(self, o) < self.radius then
+            if o.chair and get_distance(self, o) < self.radius then
                 close_ghost_nb += 1
             end
         end
     end
-    self.is_happy = ghost_nb == 0 or close_ghost_nb >= min(ghost_nb, 2)
+    if not (ghost_nb == 0 or close_ghost_nb >= min(ghost_nb, 2)) then self.is_happy = false end
     return self.is_happy and self.chair
 end
 
@@ -185,7 +188,7 @@ function door.draw(self)
         y = y - 2 + rnd(4)
     end
     spr(self.spr, self.x, self.y, self.hit_w/8, self.hit_h/8)
-    print(tostring(self.index_lvl), self.x + self.hit_w/2, self.y + self.hit_h/2, 1)
+    print(tostring(self.index_lvl), self.x + self.hit_w/2, self.y + self.hit_h/2, 15)
     local previous_level = self.index_lvl - 1
     if self.lvl.cleared then
         print("★", self.x, self.y + self.hit_h / 2, 10)
