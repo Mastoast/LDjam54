@@ -11,6 +11,9 @@ function _init()
     shake = 0
     cam = {x = 0, y = 0}
     printable = 0
+    transi = 0
+    transi_min = 0
+    transi_max = 128
     --
     exir_door_pos = {x = 105, y = 105}
     levels = {level1_1, level1_2, level1_3, level1_4, level2_1, level2_2, level2_3, level2_4, level3_1, level3_2, level3_3, level3_4, level3_5, level3_6}
@@ -29,8 +32,8 @@ function _init()
         levels[index].cleared = (dget(index) == 1 and true) or false
     end
     -- init_level(levels[current_level])
-    -- init_menu()
-    init_lvl_selection()
+    init_menu()
+    -- init_lvl_selection()
     -- create(bat, 64, 64)
 end
 
@@ -47,6 +50,13 @@ function init_menu()
     --
     menuitem(1)
     menuitem(2)
+    create(chair, 56, 88)
+    local vamp = create(vampire, 40-4, 88)
+    vamp.flip_x = true
+    create(wolf, 72 + 4, 88)
+    create(chandelier, 11, 9)
+    create(chandelier, 11, 113)
+    create(chandelier, 115, 9)
 end
 
 function init_lvl_selection()
@@ -84,9 +94,9 @@ function init_level(level)
     --
     level:init()
     create(exit_door, exir_door_pos.x, exir_door_pos.y)
-    -- create(chandelier, 11, 9)
-    -- create(chandelier, 11, 113)
-    -- create(chandelier, 115, 9)
+    create(chandelier, 11, 9)
+    create(chandelier, 11, 113)
+    create(chandelier, 115, 9)
 end
 
 function reset_progression()
@@ -112,6 +122,16 @@ end
 
 function update_menu()
     if btnp(❎) then init_lvl_selection() end
+    for o in all(objects) do
+        if o.freeze > 0 then
+            o.freeze -= 1
+        else
+            o:update()
+        end
+    end
+    for a in all(particles) do
+        a:update()
+    end
 end
 
 function update_lvl_selection()

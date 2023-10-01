@@ -35,7 +35,7 @@ function monster.draw(self)
     if self.picked then
         size = gtime % 50 < 25 and self.hit_h or self.hit_h - 1
     end
-    sspr((self.spr % 16) * 8, flr(self.spr \ 16) * 8, self.hit_w, self.hit_h, self.x, self.y, self.hit_w, size)
+    sspr((self.spr % 16) * 8, flr(self.spr \ 16) * 8, self.hit_w, self.hit_h, self.x, self.y, self.hit_w, size, self.flip_x, self.flip_y)
     if self.chair and gtime % self.ui_delay == 0 then
         if  self.is_happy then
             text = create(floating_text, self.x  + self.hit_w / 4, self.y + self.hit_h / 4)
@@ -130,17 +130,18 @@ function witch.update_solution(self)
     return self.is_happy and self.chair
 end
 
-chandelier = new_type(4)
+chandelier = new_type(119)
 function chandelier.update(self)
-    if gtime % 20 == 1 then
+    if gtime % 10 == 1 then
         spawn_particles(4, 3, self.x, self.y, 10, true)
     end
-    if gtime % 10 == 1 then
+    if gtime % 5 == 1 then
         spawn_particles(1, 2, self.x, self.y, 9, false)
     end
 end
 
 function chandelier.draw(self)
+    spr(self.spr, self.x - self.hit_w/2 + 1, self.y - 1)
     circfill(self.x, self.y, 1, 9)
 end
 
