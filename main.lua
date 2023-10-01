@@ -5,7 +5,7 @@ function _init()
     poke(0x5f5c, -1)
     cursor_color = 7
     --
-    debug = false
+    debug = true
     gtime = 0
     gstate = 0
     ndeath = 0
@@ -21,7 +21,7 @@ function _init()
     --
     exir_door_pos = {x = 105, y = 105}
     levels = {level1_1, level1_2, level1_3, level1_4, level2_1, level2_2, level2_3, level2_4, level3_1, level3_2, level3_3, level3_4, level3_5, level3_6}
-    current_level = 4
+    current_level = 1
     --
     cartdata("mastoast_transilavniawkward_v1")
     -- reset save
@@ -35,9 +35,10 @@ function _init()
     for index = 1, #levels do
         levels[index].cleared = (dget(index) == 1 and true) or false
     end
+    -- init_menu()
     -- queue_init(init_level)
-    init_menu()
     -- queue_init(init_lvl_selection)
+    init_level()
     -- create(bat, 64, 64)
 end
 
@@ -61,6 +62,7 @@ function init_menu()
     create(chandelier, 11, 9)
     create(chandelier, 11, 113)
     create(chandelier, 115, 9)
+    music(0)
 end
 
 function init_lvl_selection()

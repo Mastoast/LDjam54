@@ -133,11 +133,11 @@ end
 
 chandelier = new_type(119)
 function chandelier.update(self)
-    if gtime % 10 == 1 then
-        spawn_particles(4, 3, self.x, self.y, 10, true)
+    if gtime % 15 == 1 then
+        spawn_particles(4, 1, self.x, self.y, 10, true, 4)
     end
     if gtime % 5 == 1 then
-        spawn_particles(1, 2, self.x, self.y, 9, false)
+        spawn_particles(1, 2, self.x, self.y, 9, false, 8)
     end
 end
 
@@ -249,21 +249,22 @@ particles = {}
 -- size
 -- x / y
 -- color
-function spawn_particles(nb,s,x,y,c, randomize)
+function spawn_particles(nb,s,x,y,c,randomize, tmax)
     randomize = randomize or false
     for i=1,flr(nb) do
         local xm = x + (randomize and (rnd(2) - 1) or 0)
         local ym = y + (randomize and (rnd(2) - 1) or 0)
-        add(particles, make_particle(s,xm,ym,c))
+        add(particles, make_particle(s,xm,ym,c,tmax))
     end
 end
 
-function make_particle(s,x,y,c)
+function make_particle(s,x,y,c,tmax)
+    local tmax = tmax or 16
     local p={
         s=s or 1,
         c=c or 7,
         x=x,y=y,k=k,
-        t=0, t_max=16+flr(rnd(4)),
+        t=0, t_max=tmax+flr(rnd(4)),
         dx=rnd(2)-1,dy=-rnd(3),
         ddy=0.05,
         update=update_particle,
