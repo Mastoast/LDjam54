@@ -3,7 +3,7 @@ function _init()
     poke(0x5f2d, 3)
     cursor_color = 7
     --
-    debug = true
+    debug = false
     gtime = 0
     gstate = 0
     ndeath = 0
@@ -11,9 +11,11 @@ function _init()
     shake = 0
     cam = {x = 0, y = 0}
     printable = 0
+    transi_core = nil
+    on_transition_closed = nil
     transi = 0
     transi_min = 0
-    transi_max = 128
+    transi_max = 32
     --
     exir_door_pos = {x = 105, y = 105}
     levels = {level1_1, level1_2, level1_3, level1_4, level2_1, level2_2, level2_3, level2_4, level3_1, level3_2, level3_3, level3_4, level3_5, level3_6}
@@ -31,9 +33,9 @@ function _init()
     for index = 1, #levels do
         levels[index].cleared = (dget(index) == 1 and true) or false
     end
-    -- init_level(levels[current_level])
+    -- queue_init(init_level)
     init_menu()
-    -- init_lvl_selection()
+    -- queue_init(init_lvl_selection)
     -- create(bat, 64, 64)
 end
 
@@ -76,9 +78,16 @@ function init_lvl_selection()
         lvl.index_lvl = i + 1
         lvl.lvl = levels[i + 1]
     end
+    transi_cor = cocreate(open_transition)
 end
 
-function init_level(level)
+function queue_init(followup)
+    on_transition_closed = followup
+    transi_cor = cocreate(close_transition)
+end
+
+function init_level()
+    local level = levels[current_level]
     gtime = 0
     gstate = 3
     objects = {}
@@ -88,8 +97,8 @@ function init_level(level)
     target_y = nil
     target_chair = nil
     --
-    menuitem(1, "restart level", function() init_level(levels[current_level]) end)
-    menuitem(2, "level selection", function() init_lvl_selection() end)
+    menuitem(1, "restart level", function() queue_init(init_level) end)
+    menuitem(2, "level selection", function() queue_init(init_lvl_selection) end)
     menuitem(3, "reset progress", function() reset_progression() end)
     --
     level:init()
@@ -97,19 +106,27 @@ function init_level(level)
     create(chandelier, 11, 9)
     create(chandelier, 11, 113)
     create(chandelier, 115, 9)
+    transi_cor = cocreate(open_transition)
 end
 
 function reset_progression()
     for index = 1, #levels do
         dset(index, 0)
         levels[index].cleared = false
-        init_menu()
+        queue_init(init_menu)
     end
 end
 
 function _update60()
     -- timers
     gtime += 1
+    --
+    if transi_cor and costatus(transi_cor) != 'dead' then
+        coresume(transi_cor)
+        return
+    else
+        transi_cor = nil
+    end
 
     if gstate == 1 then
         update_menu()
@@ -120,8 +137,27 @@ function _update60()
     end
 end
 
+function open_transition()
+    transi = transi_max
+    while transi > transi_min do
+        transi -= 1
+        yield()
+    end
+end
+
+function close_transition()
+    transi = transi_min
+    while transi < transi_max do
+        transi += 1
+        yield()
+    end
+    if on_transition_closed then
+        on_transition_closed()
+    end
+end
+
 function update_menu()
-    if btnp(❎) then init_lvl_selection() end
+    if btnp(❎) then queue_init(init_lvl_selection) end
     for o in all(objects) do
         if o.freeze > 0 then
             o.freeze -= 1
@@ -181,10 +217,10 @@ function update_level()
     if debug then
         if stat(36) > 0 then
             current_level = min(current_level + 1, #levels)
-            init_level(levels[current_level])
+            queue_init(init_level)
         elseif stat(36) < 0 then
             current_level = max(current_level - 1, 1)
-            init_level(levels[current_level])
+            queue_init(init_level)
         end
     end
 
@@ -358,6 +394,7 @@ function _draw()
     end
 
     draw_cursor()
+    draw_transition()
 
     if debug then
         print(printable, cam.x + 80, cam.y + 120, 4)
@@ -369,6 +406,17 @@ function draw_cursor()
     for p in all(pixels) do
         pset(stat(32) + p.x, stat(33) + p.y, cursor_color)
     end
+end
+
+function draw_transition()
+    if transi == transi_min then return end
+    local ratio = transi / transi_max
+    circfill(64, 64, (128 / transi_max) * flr(transi), 10)
+    local height = bat.hit_h * ratio * 5
+    local width = bat.hit_w * ratio * 5
+    sspr((bat.spr % 16) * 8, flr(bat.spr \ 16) * 8, bat.hit_w, bat.hit_h, 64 - width, 64, width, height)
+    sspr((bat.spr % 16) * 8, flr(bat.spr \ 16) * 8, bat.hit_w, bat.hit_h, 64 - 1, 64, width, height, true, false)
+
 end
 
 -- UTILS

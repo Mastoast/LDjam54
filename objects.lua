@@ -145,7 +145,7 @@ function chandelier.draw(self)
     circfill(self.x, self.y, 1, 9)
 end
 
-bat = new_type(120)
+bat = new_type(122)
 bat.sprs = {120, 121}
 bat.spr_anim = 1
 bat.anim_time = 7
@@ -175,7 +175,7 @@ function door.update(self)
         local previous_level = self.index_lvl - 1
         if previous_level <= 0 or levels[previous_level].cleared then
             current_level = self.index_lvl
-            init_level(self.lvl)
+            queue_init(init_level)
         else
             self.lock_shake = 5
         end
@@ -204,7 +204,7 @@ exit_door.hit_w = 16
 exit_door.hit_h = 16
 function exit_door.update(self)
     if btnp(❎) and on_cursor(self) then
-        init_lvl_selection()
+        queue_init(init_lvl_selection)
     end
 end
 
