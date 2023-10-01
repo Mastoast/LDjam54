@@ -50,10 +50,11 @@ function init_lvl_selection()
     --
     local margin_x = 12
     local margin_y = 28
-    local line_size = 6
+    local line_size = 5
+    local distance = 24
     for i = 0, #levels - 1 do
-        local lvl = create(button, margin_x + (i % line_size) * 16, margin_y + flr(i \ line_size) * 16)
-        lvl.name = tostring(i + 1)
+        local lvl = create(door, margin_x + (i % line_size) * distance, margin_y + flr(i \ line_size) * distance)
+        lvl.index_lvl = i + 1
         lvl.lvl = levels[i + 1]
     end
 end
@@ -302,7 +303,7 @@ function _draw()
     end
 
     if gstate == 1 then
-        print_centered("game title", -1, 23, 1)
+        print_centered("hallowincompatibility", -1, 23, 1)
         print_centered("press ❎ or left click", -1, 64-1, 1)
         print_centered("press ❎ or left click", 0, 64, 7)
     elseif gstate == 2 then

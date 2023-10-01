@@ -115,27 +115,41 @@ function bat.draw(self)
     spr(self.spr, self.x + self.hit_w, self.y, 1, 1, true, false )
 end
 
-button = new_type(0)
-button.color = 7
-button.hit_w = 10
-button.hit_h = 10
-button.lvl = nil
-button.name = ""
+door = new_type(70)
+door.hit_w = 16
+door.hit_h = 16
+door.lvl = nil
+door.index_lvl = 0
+door.lock_spr = 72
+door.lock_shake = 0
 
-function button.update(self)
+function door.update(self)
+    self.lock_shake = max(self.lock_shake - 1)
     if btnp(❎) and on_cursor(self) then
-        current_level = find_item_table_index(self.lvl, levels)
-        init_level(self.lvl)
+        local previous_level = self.index_lvl - 1
+        if previous_level < 2 or levels[previous_level].cleared then
+            current_level = self.index_lvl
+            init_level(self.lvl)
+        else
+            self.lock_shake = 5
+        end
     end
 end
 
-function button.draw(self)
-    rectfill(self.x, self.y, self.x + self.hit_w - 1, self.y + self.hit_h - 1, self.color)
-    rect(self.x, self.y, self.x + self.hit_w - 1, self.y + self.hit_h - 1, 1)
-    print(self.name, self.x + self.hit_w/2, self.y + self.hit_h/2, 1)
+function door.draw(self)
+    local x, y = self.x, self.y
+    if self.lock_shake > 0 then
+        x = x - 2 + rnd(4)
+        y = y - 2 + rnd(4)
+    end
+    spr(self.spr, self.x, self.y, self.hit_w/8, self.hit_h/8)
+    print(tostring(self.index_lvl), self.x + self.hit_w/2, self.y + self.hit_h/2, 1)
+    local previous_level = self.index_lvl - 1
     if self.lvl.cleared then
-        line(self.x + 2, self.y, self.x, self.y + 2, 8)
-        line(self.x + 3, self.y, self.x, self.y + 3, 8)
+        print("★", self.x, self.y + self.hit_h / 2, 10)
+    end
+    if previous_level > 0 and not levels[previous_level].cleared then
+        spr(self.lock_spr, x, y, self.hit_w/8, self.hit_h/8)
     end
 end
 
