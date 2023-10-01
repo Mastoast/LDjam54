@@ -13,20 +13,24 @@ function _init()
     printable = 0
     --
     exir_door_pos = {x = 105, y = 105}
-    levels = {level1_1, level1_2, level1_3, level1_4, level2_1}
+    levels = {level1_1, level1_2, level1_3, level1_4, level2_1, level2_2, level2_3, level2_4, level3_1, level3_2, level3_3, level3_4}
     current_level = 4
     --
-    cartdata("mastoast_socialmonsters_v1")
+    cartdata("mastoast_transilavniawkward_v1")
     -- reset save
     -- for index = 1, #levels do
     --     dset(index, 0)
     -- end
+    --complete save
+    -- for index = 1, #levels do
+    --     dset(index, 1)
+    -- end
     for index = 1, #levels do
         levels[index].cleared = (dget(index) == 1 and true) or false
     end
-    init_level(levels[current_level])
+    -- init_level(levels[current_level])
     -- init_menu()
-    -- init_lvl_selection()
+    init_lvl_selection()
     -- create(bat, 64, 64)
 end
 
@@ -56,7 +60,7 @@ function init_lvl_selection()
     local margin_x = 12
     local margin_y = 28
     local line_size = 5
-    local distance = 24
+    local distance = 23
     for i = 0, #levels - 1 do
         local lvl = create(door, margin_x + (i % line_size) * distance, margin_y + flr(i \ line_size) * distance)
         lvl.index_lvl = i + 1
@@ -76,16 +80,21 @@ function init_level(level)
     --
     menuitem(1, "restart level", function() init_level(levels[current_level]) end)
     menuitem(2, "level selection", function() init_lvl_selection() end)
+    menuitem(3, "reset progress", function() reset_progression() end)
     --
     level:init()
     create(exit_door, exir_door_pos.x, exir_door_pos.y)
-    if level.cleared then
-        spawn_particles(15,5,exir_door_pos.x + 8,exir_door_pos.y + 8,7)
-    end
     -- create(chandelier, 11, 9)
-    -- create(chandelier, 115, 113)
     -- create(chandelier, 11, 113)
     -- create(chandelier, 115, 9)
+end
+
+function reset_progression()
+    for index = 1, #levels do
+        dset(index, 0)
+        levels[index].cleared = false
+        init_menu()
+    end
 end
 
 function _update60()
@@ -188,8 +197,8 @@ function update_solution()
         if not levels[current_level].cleared then
             levels[current_level].cleared = true
             dset(current_level, 1)
-            spawn_particles(15,5,exir_door_pos.x + 8,exir_door_pos.y + 8,7)
         end
+        spawn_particles(15,5,exir_door_pos.x + 8,exir_door_pos.y + 8,7)
     end
 end
 

@@ -1,4 +1,4 @@
-monster_map = { chair, ghost, skeleton, vampire, wolf, witch }
+monster_map = { chair, ghost, skeleton, vampire, wolf, witch, table }
 
 function load_level_from_map(level)
     local lmap = level.map
@@ -69,5 +69,25 @@ end
 
 level2_1 = { radius = 20, map = {x = 64, y = 0} }
 function level2_1.init(self)
+    load_level_from_map(self)
+end
+
+level2_2 = { radius = 20, map = {x = 80, y = 0} }
+function level2_2.init(self)
+    load_level_from_map(self)
+end
+
+level2_3 = { radius = 20, map = {x = 96, y = 0} }
+function level2_3.init(self)
+    load_level_from_map(self)
+end
+
+level2_4 = { radius = 40, map = {x = 112, y = 0} }
+function level2_4.init(self)
+    load_level_from_map(self)
+end
+
+level3_1 = { radius = 40, map = {x = 0, y = 16} }
+function level3_1.init(self)
     load_level_from_map(self)
 end

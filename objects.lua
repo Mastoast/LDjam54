@@ -74,16 +74,29 @@ function ghost.update_solution(self)
 end
 
 skeleton = new_type(22, monster)
+function skeleton.update_solution(self)
+    self.is_happy = true
+    for o in all(objects) do
+        if self != o then
+            if o.base == witch and get_distance(self, o) < self.radius then
+                self.is_happy = false
+            end
+        end
+    end
+    return self.is_happy and self.chair
+end
 
 vampire = new_type(24, monster)
 function vampire.update_solution(self)
     self.is_happy = true
     for o in all(objects) do
-        if self != o and o.base == wolf and get_distance(self, o) < self.radius then
-            self.is_happy = false
+        if self != o then
+            if o.base == vampire and get_distance(self, o) < self.radius then
+                self.is_happy = false
+            end
         end
     end
-    return self.is_happy
+    return self.is_happy and self.chair
 end
 
 wolf = new_type(26, monster)
@@ -94,10 +107,25 @@ function wolf.update_solution(self)
             self.is_happy = false
         end
     end
-    return self.is_happy
+    return self.is_happy and self.chair
 end
 
 witch = new_type(28, monster)
+function witch.update_solution(self)
+    local ghost_nb = 0
+    local close_ghost_nb = 0
+    self.is_happy = true
+    for o in all(objects) do
+        if o.base == ghost then
+            ghost_nb += 1
+            if get_distance(self, o) < self.radius then
+                close_ghost_nb += 1
+            end
+        end
+    end
+    self.is_happy = ghost_nb == 0 or close_ghost_nb >= min(ghost_nb, 2)
+    return self.is_happy and self.chair
+end
 
 chandelier = new_type(4)
 function chandelier.update(self)
@@ -141,7 +169,7 @@ function door.update(self)
     self.lock_shake = max(self.lock_shake - 1)
     if btnp(❎) and on_cursor(self) then
         local previous_level = self.index_lvl - 1
-        if previous_level < 2 or levels[previous_level].cleared then
+        if previous_level <= 0 or levels[previous_level].cleared then
             current_level = self.index_lvl
             init_level(self.lvl)
         else
@@ -199,6 +227,10 @@ end
 function floating_text.draw(self)
     print(self.text, self.x, self.y, self.color)
 end
+
+table = new_type(74)
+table.sprite_h = 2
+table.sprite_w = 2
 
 -- PARTICLES
 particles = {}
