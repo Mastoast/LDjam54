@@ -42,7 +42,8 @@ function monster.draw(self)
             text.text = "♥"
         else
             text = create(floating_text, self.x  + self.hit_w / 4, self.y + self.hit_h / 4)
-            text.text = "!"
+            text.text = "😐"
+            text.color = 3
         end
     end
     -- print(self.ui_delay, self.x, self.y, 9)
@@ -210,6 +211,11 @@ end
 
 function exit_door.draw(self)
     spr(self.spr, self.x, self.y, self.hit_w/8, self.hit_h/8)
+    if (levels[current_level].cleared) then
+        print("★", self.x, self.y + self.hit_h / 2, 10)
+    else
+        print("◆", self.x, self.y + self.hit_h / 2, 8)
+    end
 end
 
 floating_text = new_type(0)

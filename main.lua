@@ -1,6 +1,8 @@
 function _init()
     -- enable mouse
     poke(0x5f2d, 3)
+    -- disable key repeat
+    poke(0x5f5c, -1)
     cursor_color = 7
     --
     debug = false
@@ -254,7 +256,7 @@ function update_solution()
             levels[current_level].cleared = true
             dset(current_level, 1)
         end
-        spawn_particles(15,5,exir_door_pos.x + 8,exir_door_pos.y + 8,7)
+        spawn_particles(15,5,exir_door_pos.x + 8,exir_door_pos.y + 8, 10)
     end
 end
 
@@ -386,8 +388,8 @@ function _draw()
         coord = print("transilvani", coord, 23, 7)
         print("awkward", coord-1, 23-1, 1)
         print("awkward", coord, 23, 9)
-        print_centered("press ❎ or left click", -1, 64-1, 1)
-        print_centered("press ❎ or left click", 0, 64, 7)
+        print_centered("press left click", -1, 64-1, 1)
+        print_centered("press left click", 0, 64, 7)
     elseif gstate == 2 then
         print_centered("level selection", -1, 13-1, 1)
         print_centered("level selection", 0, 13, 7)
