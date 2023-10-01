@@ -112,7 +112,13 @@ function level3_5.init(self)
     load_level_from_map(self)
 end
 
-level3_6 = { radius = 40, map = {x = 80, y = 16} }
+level3_6 = { radius = 35, map = {x = 96, y = 16} }
 function level3_6.init(self)
     load_level_from_map(self)
 end
+
+level3_7 = { radius = 40, map = {x = 80, y = 16} }
+function level3_7.init(self)
+    load_level_from_map(self)
+end
+

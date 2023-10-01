@@ -20,7 +20,7 @@ function _init()
     transi_max = 32
     --
     exir_door_pos = {x = 105, y = 105}
-    levels = {level1_1, level1_2, level1_3, level1_4, level2_1, level2_2, level2_3, level2_4, level3_1, level3_2, level3_3, level3_4, level3_5, level3_6}
+    levels = {level1_1, level1_2, level1_3, level1_4, level2_1, level2_2, level2_3, level2_4, level3_1, level3_2, level3_3, level3_4, level3_5, level3_6, level3_7}
     current_level = 1
     --
     cartdata("mastoast_transilvaniawkward_v1")
@@ -377,6 +377,11 @@ function _draw()
         -- circfill(moon_x - 6, moon_y - 2, 8, 0)
     elseif gstate == 2 then
         map(0, 0, 0, 0, 16, 16)
+        if levels[#levels].cleared then
+            print_centered("thank you for playing !", 0-1, 105-1, 1)
+            print_centered("thank you for playing !", 0-1, 105+1, 1)
+            print_centered("thank you for playing !", 0, 105, 15)
+        end
     elseif gstate == 3 then
         map(0, 0, 0, 0, 16, 16)
     end
