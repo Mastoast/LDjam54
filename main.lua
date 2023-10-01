@@ -5,7 +5,7 @@ function _init()
     poke(0x5f5c, -1)
     cursor_color = 7
     --
-    debug = true
+    debug = false
     gtime = 0
     gstate = 0
     ndeath = 0
@@ -23,7 +23,7 @@ function _init()
     levels = {level1_1, level1_2, level1_3, level1_4, level2_1, level2_2, level2_3, level2_4, level3_1, level3_2, level3_3, level3_4, level3_5, level3_6}
     current_level = 1
     --
-    cartdata("mastoast_transilavniawkward_v1")
+    cartdata("mastoast_transilvaniawkward_v1")
     -- reset save
     -- for index = 1, #levels do
     --     dset(index, 0)
@@ -35,10 +35,10 @@ function _init()
     for index = 1, #levels do
         levels[index].cleared = (dget(index) == 1 and true) or false
     end
-    -- init_menu()
+    init_menu()
     -- queue_init(init_level)
     -- queue_init(init_lvl_selection)
-    init_level()
+    -- init_level()
     -- create(bat, 64, 64)
 end
 
@@ -100,6 +100,7 @@ function init_level()
     target_x = nil
     target_y = nil
     target_chair = nil
+    lwin = false
     --
     menuitem(1, "restart level", function() queue_init(init_level) end)
     menuitem(2, "level selection", function() queue_init(init_lvl_selection) end)
@@ -254,11 +255,22 @@ function update_solution()
         end
     end
     if win == true then
+        if not lwin then
+            spawn_particles(15,5,exir_door_pos.x + 8,exir_door_pos.y + 8, 10)
+            --
+            local txt = "level cleared"
+            local text = create(floating_text, 64 - (#txt * 2), 30)
+            text.text = txt
+            text.color = 7
+            text.t_max = 45
+        end
+        lwin = true
         if not levels[current_level].cleared then
             levels[current_level].cleared = true
             dset(current_level, 1)
         end
-        spawn_particles(15,5,exir_door_pos.x + 8,exir_door_pos.y + 8, 10)
+    else
+        lwin = false
     end
 end
 

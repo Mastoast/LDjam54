@@ -38,10 +38,10 @@ function monster.draw(self)
     sspr((self.spr % 16) * 8, flr(self.spr \ 16) * 8, self.hit_w, self.hit_h, self.x, self.y, self.hit_w, size, self.flip_x, self.flip_y)
     if self.chair and gtime % self.ui_delay == 0 then
         if  self.is_happy then
-            text = create(floating_text, self.x  + self.hit_w / 4, self.y + self.hit_h / 4)
+            local text = create(floating_text, self.x  + self.hit_w / 4, self.y + self.hit_h / 4)
             text.text = "♥"
         else
-            text = create(floating_text, self.x  + self.hit_w / 4, self.y + self.hit_h / 4)
+            local text = create(floating_text, self.x  + self.hit_w / 4, self.y + self.hit_h / 4)
             text.text = "😐"
             text.color = 3
         end
@@ -224,7 +224,7 @@ floating_text.color = 8
 floating_text.t=0
 floating_text.t_max=0
 function floating_text.init(self)
-    self.t_max = 16+flr(rnd(4))
+    self.t_max = 14+flr(rnd(4))
 end
 function floating_text.update(self)
     if gtime %3 == 0 then self.y -= 1 end
@@ -235,6 +235,10 @@ function floating_text.update(self)
     if (self.t >= self.t_max) del(objects, self)
 end
 function floating_text.draw(self)
+    print(self.text, self.x -1, self.y -1, 0)
+    -- print(self.text, self.x +1, self.y -1, 0)
+    print(self.text, self.x +1, self.y +1, 0)
+    print(self.text, self.x -1, self.y +1, 0)
     print(self.text, self.x, self.y, self.color)
 end
 
