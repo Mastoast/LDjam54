@@ -14,7 +14,7 @@ function _init()
     --
     exir_door_pos = {x = 105, y = 105}
     levels = {level1_1, level1_2, level1_3, level1_4, level2_1}
-    current_level = 1
+    current_level = 4
     --
     cartdata("mastoast_socialmonsters_v1")
     -- reset save

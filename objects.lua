@@ -23,7 +23,7 @@ monster.is_happy = false
 function monster.update_solution(self) self.is_happy = true; return self.is_happy and self.chair end
 
 function monster.init(self)
-    self.ui_delay = flr(25 + rnd(25))
+    self.ui_delay = flr(20 + rnd(15))
 end
 
 function monster.update(self)
@@ -189,8 +189,8 @@ function floating_text.init(self)
     self.t_max = 16+flr(rnd(4))
 end
 function floating_text.update(self)
+    if gtime %3 == 0 then self.y -= 1 end
     if gtime %2 == 0 then
-        self.y -= 1
         self.x += sin((gtime + self.t_max - self.t % 100) / 10 )
         self.t += 1
     end

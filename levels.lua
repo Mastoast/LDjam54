@@ -66,3 +66,8 @@ level1_4 = { radius = 20, map = {x = 32, y = 0} }
 function level1_4.init(self)
     load_level_from_map(self)
 end
+
+level2_1 = { radius = 20, map = {x = 64, y = 0} }
+function level2_1.init(self)
+    load_level_from_map(self)
+end
