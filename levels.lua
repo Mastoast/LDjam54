@@ -46,6 +46,9 @@ level1_1 = { radius = 256 }
 function level1_1.init(self)
     create(chair, 56, 56)
     create(skeleton, 90, 55)
+    for o in all(objects) do
+        o.radius = self.radius
+    end
 end
 
 level1_2 = { radius = 20, map = {x = 16, y = 0} }

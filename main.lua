@@ -12,10 +12,15 @@ function _init()
     cam = {x = 0, y = 0}
     printable = 0
     --
+    exir_door_pos = {x = 105, y = 105}
     levels = {level1_1, level1_2, level1_3, level1_4, level2_1}
     current_level = 1
     --
     cartdata("mastoast_socialmonsters_v1")
+    -- reset save
+    -- for index = 1, #levels do
+    --     dset(index, 0)
+    -- end
     for index = 1, #levels do
         levels[index].cleared = (dget(index) == 1 and true) or false
     end
@@ -73,6 +78,10 @@ function init_level(level)
     menuitem(2, "level selection", function() init_lvl_selection() end)
     --
     level:init()
+    create(exit_door, exir_door_pos.x, exir_door_pos.y)
+    if level.cleared then
+        spawn_particles(15,5,exir_door_pos.x + 8,exir_door_pos.y + 8,7)
+    end
     -- create(chandelier, 11, 9)
     -- create(chandelier, 115, 113)
     -- create(chandelier, 11, 113)
@@ -120,18 +129,6 @@ function update_level()
     -- screenshake
     shake = max(shake - 1)
 
-    for o in all(objects) do
-        if o.freeze > 0 then
-            o.freeze -= 1
-        else
-            o:update()
-        end
-
-        if o.base != player and o.destroyed then
-            del(objects, o)
-        end
-    end
-
     -- player actions
     if btnp(❎) then
         if target then
@@ -162,6 +159,19 @@ function update_level()
         end
     end
 
+    -- update scene
+    for o in all(objects) do
+        if o.freeze > 0 then
+            o.freeze -= 1
+        else
+            o:update()
+        end
+
+        if o.base != player and o.destroyed then
+            del(objects, o)
+        end
+    end
+
     for a in all(particles) do
         a:update()
     end
@@ -174,9 +184,12 @@ function update_solution()
             if not o:update_solution() then win = false end
         end
     end
-    if win == true and not levels[current_level].cleared then
-        levels[current_level].cleared = true
-        dset(current_level, 1)
+    if win == true then
+        if not levels[current_level].cleared then
+            levels[current_level].cleared = true
+            dset(current_level, 1)
+            spawn_particles(15,5,exir_door_pos.x + 8,exir_door_pos.y + 8,7)
+        end
     end
 end
 

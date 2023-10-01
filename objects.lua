@@ -56,7 +56,7 @@ function ghost.update_solution(self)
             self.is_happy = true
         end
     end
-    return self.is_happy
+    return self.is_happy and self.chair
 end
 
 skeleton = new_type(22, monster)
@@ -152,6 +152,20 @@ function door.draw(self)
         spr(self.lock_spr, x, y, self.hit_w/8, self.hit_h/8)
     end
 end
+
+exit_door = new_type(70)
+exit_door.hit_w = 16
+exit_door.hit_h = 16
+function exit_door.update(self)
+    if btnp(❎) and on_cursor(self) then
+        init_lvl_selection()
+    end
+end
+
+function exit_door.draw(self)
+    spr(self.spr, self.x, self.y, self.hit_w/8, self.hit_h/8)
+end
+
 
 -- PARTICLES
 particles = {}
