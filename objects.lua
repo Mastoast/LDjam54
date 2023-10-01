@@ -22,6 +22,10 @@ monster.chair = nil
 monster.is_happy = false
 function monster.update_solution(self) self.is_happy = true; return self.is_happy and self.chair end
 
+function monster.init(self)
+    self.ui_delay = flr(25 + rnd(25))
+end
+
 function monster.update(self)
     
 end
@@ -32,6 +36,16 @@ function monster.draw(self)
         size = gtime % 50 < 25 and self.hit_h or self.hit_h - 1
     end
     sspr((self.spr % 16) * 8, flr(self.spr \ 16) * 8, self.hit_w, self.hit_h, self.x, self.y, self.hit_w, size)
+    if self.chair and gtime % self.ui_delay == 0 then
+        if  self.is_happy then
+            text = create(floating_text, self.x  + self.hit_w / 4, self.y + self.hit_h / 4)
+            text.text = "♥"
+        else
+            text = create(floating_text, self.x  + self.hit_w / 4, self.y + self.hit_h / 4)
+            text.text = "!"
+        end
+    end
+    -- print(self.ui_delay, self.x, self.y, 9)
 end
 
 function monster.draw_ui(self)
@@ -39,13 +53,13 @@ function monster.draw_ui(self)
     if self.picked then
         circ(self.x + self.hit_w/2, self.y + self.hit_h/2, self.radius, 7)
     end
-    if self.chair then
-        if  self.is_happy then
-            print("♥", self.x  + self.hit_w / 2, self.y - 7, 8)
-        else
-            print("!", self.x  + self.hit_w / 2, self.y - 7, 8)
-        end
-    end
+    -- if self.chair then
+    --     if  self.is_happy then
+    --         print("♥", self.x  + self.hit_w / 2, self.y - 7, 8)
+    --     else
+    --         print("!", self.x  + self.hit_w / 2, self.y - 7, 8)
+    --     end
+    -- end
 end
 
 ghost = new_type(20, monster)
@@ -166,6 +180,25 @@ function exit_door.draw(self)
     spr(self.spr, self.x, self.y, self.hit_w/8, self.hit_h/8)
 end
 
+floating_text = new_type(0)
+floating_text.text = "?!"
+floating_text.color = 8
+floating_text.t=0
+floating_text.t_max=0
+function floating_text.init(self)
+    self.t_max = 16+flr(rnd(4))
+end
+function floating_text.update(self)
+    if gtime %2 == 0 then
+        self.y -= 1
+        self.x += sin((gtime + self.t_max - self.t % 100) / 10 )
+        self.t += 1
+    end
+    if (self.t >= self.t_max) del(objects, self)
+end
+function floating_text.draw(self)
+    print(self.text, self.x, self.y, self.color)
+end
 
 -- PARTICLES
 particles = {}

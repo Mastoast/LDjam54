@@ -24,9 +24,9 @@ function _init()
     for index = 1, #levels do
         levels[index].cleared = (dget(index) == 1 and true) or false
     end
-    -- init_level(levels[current_level])
+    init_level(levels[current_level])
     -- init_menu()
-    init_lvl_selection()
+    -- init_lvl_selection()
     -- create(bat, 64, 64)
 end
 
@@ -316,7 +316,11 @@ function _draw()
     end
 
     if gstate == 1 then
-        print_centered("hallowincompatibility", -1, 23, 1)
+        local coord = 64 - (#"transilvaniawkward" * 2)
+        print("transilvani", coord - 1, 23 - 1, 1)
+        coord = print("transilvani", coord, 23, 7)
+        print("awkward", coord-1, 23-1, 1)
+        print("awkward", coord, 23, 9)
         print_centered("press ❎ or left click", -1, 64-1, 1)
         print_centered("press ❎ or left click", 0, 64, 7)
     elseif gstate == 2 then
@@ -355,7 +359,7 @@ end
 
 -- print at center
 function print_centered(str, offset_x, y, col)
-    print(str, cam.x + 64 - (#str * 2) + offset_x, y, col)
+    return print(str, cam.x + 64 - (#str * 2) + offset_x, y, col)
 end
 
 -- random range

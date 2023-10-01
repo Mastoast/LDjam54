@@ -8,7 +8,7 @@ __lua__
 
 --[[ 
     TODO
-    level cleared => celebration
+    Levels
 
     bat transition
     SFX
@@ -16,6 +16,7 @@ __lua__
 
     Visuals
     monster ui animation
+    level cleared => celebration
     light effects
     decorations
     monster animations
