@@ -7,9 +7,7 @@ __lua__
 #include main.lua
 
 --[[ 
-    TODO
-    final levels
-    second music loop
+
 ]]
 
 --❎🅾️⬆️⬇️⬅️➡️
